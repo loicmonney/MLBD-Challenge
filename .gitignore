@@ -55,3 +55,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Dummy files
+.DS_Store
+Thumbs.db
