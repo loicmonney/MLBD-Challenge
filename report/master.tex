@@ -20,7 +20,7 @@
 %----------------------------------------------------------
 % Copyright
 %----------------------------------------------------------
-%\input{chapters/copyright}
+\input{chapters/copyright}
 
 %----------------------------------------------------------
 % Front matter
@@ -43,10 +43,7 @@
 \begingroup
 	\renewcommand{\cleardoublepage}{}
 	\renewcommand{\clearpage}{}
-	\input{chapters/content/01_introduction}
-	\input{chapters/content/02_dataset}
-	\input{chapters/content/03_features_extraction}
-	\input{chapters/content/09_conclusion}
+	\includescript{python scripts/auto-include-content.py chapters/content}
 \endgroup
 
 
@@ -54,7 +51,7 @@
 % Appendices
 %----------------------------------------------------------
 \appendix
-%\includescript{scripts/auto-include-content.py chapters/appendix}
+\includescript{python scripts/auto-include-content.py chapters/appendix}
 
 
 %\bibliographystyle{plain}

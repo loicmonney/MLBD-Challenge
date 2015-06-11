@@ -1,6 +1,6 @@
 *.log
+*.aux
 master.acn
-master.aux
 master.glo
 master.idx
 master.ist
