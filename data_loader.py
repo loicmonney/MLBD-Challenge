@@ -33,9 +33,9 @@ def list_files(path, extension='.png'):
 
 
 def load_numbers():
-    '''
+    """
      Get the path and the class for each number of the data set (0-9)
-    '''
+    """
 
     classes = []
     paths = []
