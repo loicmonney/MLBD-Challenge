@@ -1,3 +1,3 @@
 clear
-LoadTrainSet();
+trainingSet = LoadTrainSet();
 %load('data/trainingSet.mat');

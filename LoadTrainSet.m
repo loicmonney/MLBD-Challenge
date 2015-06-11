@@ -12,7 +12,8 @@ function [ trainingSet ] = LoadTrainSet()
         I = imread(crt_file); % load image file
         I = rgb2gray(I); % 3 dimensional to 2 dimensional, required by SURF
         points = detectSURFFeatures(I); % extract surf features
-        trainingSet.class(crt_class).image(id+1).points = points;
+        [features, valid_points] = extractFeatures(I, points);
+        trainingSet.class(crt_class).image(id+1).features = features;
     end
     disp('--- Finished the loading of the Trainset ---');
 end
