@@ -1,0 +1,70 @@
+\documentclass[10pt,a4paper,onecolumn,twoside,francais,draft]{StyleThese}
+\usepackage[acronym]{glossaries}
+\usepackage{placeins}
+
+\makeindex
+\makeglossaries
+\input{preamble}
+\usepackage{caption}
+\usepackage{subcaption}
+\input{headers-footers}
+%\include{formatAndDefs} 
+
+\begin{document}
+
+%----------------------------------------------------------
+% Title
+%----------------------------------------------------------
+\input{chapters/title}
+
+%----------------------------------------------------------
+% Copyright
+%----------------------------------------------------------
+%\input{chapters/copyright}
+
+%----------------------------------------------------------
+% Front matter
+%----------------------------------------------------------
+\pagestyle{front}
+\pagenumbering{roman}
+\input{chapters/front-matter}
+
+%----------------------------------------------------------
+% Table of contents
+%----------------------------------------------------------
+\tableofcontents
+\clearpage
+
+%----------------------------------------------------------
+% Content
+%----------------------------------------------------------
+\pagestyle{main}
+\pagenumbering{arabic}
+\begingroup
+	\renewcommand{\cleardoublepage}{}
+	\renewcommand{\clearpage}{}
+	\input{chapters/content/01_introduction}
+	\input{chapters/content/02_dataset}
+	\input{chapters/content/03_features_extraction}
+	\input{chapters/content/09_conclusion}
+\endgroup
+
+
+%----------------------------------------------------------
+% Appendices
+%----------------------------------------------------------
+\appendix
+%\includescript{scripts/auto-include-content.py chapters/appendix}
+
+
+%\bibliographystyle{plain}
+%\bibliography{BachelorThese}
+%\printnomenclature
+%\printglossary[title=Acronymes,type=\acronymtype]
+%\printglossary
+%\newpage
+%\listoffigures
+%\newpage
+%\listoftables
+
+\end{document}
