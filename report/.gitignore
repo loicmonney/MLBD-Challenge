@@ -1,0 +1,12 @@
+*.log
+master.acn
+master.aux
+master.glo
+master.idx
+master.ist
+master.nlo
+master.out
+master.pdf
+master.synctex.gz
+master.tex
+master.toc
