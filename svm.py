@@ -122,14 +122,14 @@ def load_or_train(X, y, force_train=False, enable_plot=False):
         ## Cross-validation
         from sklearn.cross_validation import ShuffleSplit
 
-        cv = ShuffleSplit(X.shape[0], n_iter=10, test_size=0.2, random_state=0)
+        cv = ShuffleSplit(len(X), n_iter=10, test_size=0.2, random_state=0)
 
         from sklearn.grid_search import GridSearchCV
         import numpy as np
 
         gammas = np.logspace(-6, -1, 10)
         estimator = svm.SVC(gamma=0.001)
-        classifier = GridSearchCV(estimator=estimator, cv=cv, param_grid=dict(gamma=gammas))
+        classifier = GridSearchCV(estimator=estimator, cv=cv, param_grid=dict(gamma=gammas), n_jobs=6, verbose=2)
         classifier.fit(X, y)
 
         title = 'Learning Curves (SVM, linear kernel, $\gamma=%.6f$)' % classifier.best_estimator_.gamma

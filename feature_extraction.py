@@ -29,29 +29,38 @@ import numpy as np
 from PIL import Image
 from sklearn.decomposition import RandomizedPCA
 from sklearn.preprocessing import StandardScaler
-
+from skimage.feature import hog
 
 def get_image_data(filename):
     img = Image.open(filename)
-    img = img.getdata()
+    #img = img.getdata()
     #img = img.resize(STANDARD_SIZE)
     #img = map(list, img)
-    img = np.array(img)
-    s = img.shape[0] * img.shape[1]
-    img_wide = img.reshape(1, s)
-    return img_wide[0]
+    img = np.array(img.convert('L'))
+    return img
+    #s = img.shape[0] * img.shape[1]
+    #img_wide = img.reshape(1, s)
+    #return img_wide[0]
 
+pca = RandomizedPCA(n_components=10)
+std_scaler = StandardScaler()
 
 def apply_pca(data):
-    pca = RandomizedPCA(n_components=10)
-    std_scaler = StandardScaler()
+    flat = []
+    for d in data:
+        flat += d.flatten()
     data = pca.fit_transform(data)
     data = std_scaler.fit_transform(data)
     return data
 
 def extract_features(paths):
-    data = []
+    all_features = []
     for f in paths:
-        data.append(get_image_data(f))
-    features = apply_pca(data)
-    return features
+        data = get_image_data(f)
+        features = []
+        fd = hog(data, orientations=9, pixels_per_cell=(4, 4), cells_per_block=(2, 2))
+        features.extend(fd)
+        # features = apply_pca(data)
+        all_features.append(features)
+
+    return all_features
