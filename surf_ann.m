@@ -1,13 +1,15 @@
 clear
-%trainingSet = LoadTrainSet();
-load('data/trainingSet_4.mat');
+trainingSet = LoadTrainSet();
+%load('data/trainingSet_4.mat');
 
 input = []; % the features and all samples
 output = []; % which class is the correct answer of a given feature (in input)
-for i=1:size(trainingSet.class,2)
+%for i=1:size(trainingSet.class,2) % cycle through all classes
+for i=1:10 % only image with 0-9
     for j=1:size(trainingSet.class(i).image,2)
         input = [input; trainingSet.class(i).image(j).features];
-        temp = zeros(size(trainingSet.class(i).image(j).features,1),size(trainingSet.class,2)); % matrix nbClass x nbSamples
+        %temp = zeros(size(trainingSet.class(i).image(j).features,1),size(trainingSet.class,2)); % matrix nbClass x nbSamples
+        temp = zeros(size(trainingSet.class(i).image(j).features,1),10);
         temp = temp';
         temp(i,:) = 1;
         temp = temp';
@@ -21,7 +23,7 @@ x = input;
 t = output;
 
 % Create a Pattern Recognition Network
-hiddenLayerSize = 30;
+hiddenLayerSize = 10;
 net = patternnet(hiddenLayerSize);
 
 % Setup Division of Data for Training, Validation, Testing

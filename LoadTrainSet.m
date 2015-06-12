@@ -3,7 +3,7 @@ function [ trainingSet ] = LoadTrainSet()
     all_img = importfile('data/all.txt');
     nb_img_per_class = 55;
     crt_class = 0;
-    surf_points = 1;
+    surf_points = 14;
     surf_descriptor_size = 64;
     for i=1:size(all_img)
         id = mod(i-1,nb_img_per_class);
@@ -21,6 +21,10 @@ function [ trainingSet ] = LoadTrainSet()
         %end
         points = points.selectStrongest(surf_points);
         [features, valid_points] = extractFeatures(I, points);
+        if size(features,1) < surf_points
+            disp('Problem, image has not enough points');
+            size(features,1)
+        end
         features = reshape(features',[1,surf_points*surf_descriptor_size]);
         trainingSet.class(crt_class).image(id+1).features = features;
     end
