@@ -1,6 +1,6 @@
 clear
 trainingSet = LoadTrainSet();
-%load('data/trainingSet_4.mat');
+%load('data/trainingSet_40_small.mat');
 
 input = []; % the features and all samples
 output = []; % which class is the correct answer of a given feature (in input)
@@ -22,28 +22,50 @@ output = output';
 x = input;
 t = output;
 
+min = 1;
+max = 0;
+
 % Create a Pattern Recognition Network
 hiddenLayerSize = 10;
-net = patternnet(hiddenLayerSize);
+for i=1:100
+    net = patternnet(hiddenLayerSize);
 
-% Setup Division of Data for Training, Validation, Testing
-net.divideParam.trainRatio = 70/100;
-net.divideParam.valRatio = 15/100;
-net.divideParam.testRatio = 15/100;
+    % Setup Division of Data for Training, Validation, Testing
+    net.divideParam.trainRatio = 70/100;
+    net.divideParam.valRatio = 15/100;
+    net.divideParam.testRatio = 15/100;
 
-% Train the Network
-[net,tr] = train(net,x,t);
+    % Train the Network
+    [net,tr] = train(net,x,t);
 
-model = struct('net',net,'tr',tr);
-disp('--- Finished the training of the model for the algorithm ---');
+    model = struct('net',net,'tr',tr);
+    disp('--- Finished the training of the model for the algorithm ---');
 
-% Test the Network
-y = net(x);
-e = gsubtract(t,y);
-tind = vec2ind(t);
-yind = vec2ind(y);
-percentErrors = sum(tind ~= yind)/numel(tind);
-performance = perform(net,t,y)
+    % Test the Network
+    y = net(x);
+    e = gsubtract(t,y);
+    tind = vec2ind(t);
+    yind = vec2ind(y);
+    percentErrors = sum(tind ~= yind)/numel(tind);
+    percentCorrect = 1-percentErrors;
+    performance = perform(net,t,y);
+
+    if percentCorrect > max
+        max = percentCorrect;
+    end
+    
+    if percentCorrect < min
+        min = percentCorrect;
+    end
+    
+    if percentCorrect > 0.9
+        figure, plotconfusion(t,y)
+    end
+    
+end
+
+min
+max
 
 % View the Network
 %view(net)
@@ -52,7 +74,7 @@ performance = perform(net,t,y)
 % Uncomment these lines to enable various plots.
 %figure, plotperform(tr)
 %figure, plottrainstate(tr)
-disp('--- Display the confusion matrix ---');
-figure, plotconfusion(t,y)
+%disp('--- Display the confusion matrix ---');
+%figure, plotconfusion(t,y)
 %figure, plotroc(t,y)
 %figure, ploterrhist(e)
