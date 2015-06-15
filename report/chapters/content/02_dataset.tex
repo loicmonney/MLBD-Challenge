@@ -5,7 +5,7 @@
 
 Nous avons décidé d'utiliser le dataset \emph{Chars74K English hnd} soumis par \emph{teo} sous licence \emph{ODbL~1.0}. Celui-ci est disponible en téléchargement sur la plateforme \url{http://mldata.org/repository/tags/data/handwritten-digits}.
 
-Il regroupe les caractères manuscrits \emph{0} à \emph{9}, \emph{A} à \emph{Z} et \emph{a} à \emph{z} écrits sur une surface de saisie numérique. Il y a donc 62 caractères/classes différentes, chacune contenant exactement 55 samples sous la forme d'image PNG. Le dataset contient donc un total de $3'410$ images, dont quelques unes sont représentées sur la figure \vref{fig:dataset-examples}. Nous constatons que certains caractères se ressemblent très fortement, comme les \emph{0} (chiffre zéro) et les \emph{O} (lettre).
+Il regroupe les caractères manuscrits \emph{0} à \emph{9}, \emph{A} à \emph{Z} et \emph{a} à \emph{z} écrits sur une surface de saisie numérique. Il y a donc 62 caractères/classes différentes, chacune contenant exactement 55 samples sous la forme d'image PNG. Le dataset contient donc un total de $3'410$ images, dont quelques unes sont représentées sur la figure \vref{fig:dataset-examples}. Nous constatons que certains caractères se ressemblent très fortement, comme les \emph{0} (chiffre zéro) et les \emph{O} (lettre) ou encore les \emph{9} (neuf) et les \emph{q} (lettre). On s'attend donc à avoir un score plus faible pour eux.
 
 \begin{figure}[h]
 \includescript{python scripts/data-images.py ../data/Img}

@@ -3,11 +3,26 @@
 
 % ---------------------------------------
 \section{Introduction}
-\todo[inline]{TODO}
+
+Le descripteur HOG (Histograms of Oriented Gradients) a été présenté en 2005 dans le cadre de la détection de personnes \cite{NavneetHOG}. En quelques mots, l'image est découpée en plusieurs cellules régulières, dans lesquelles on va décrire la forme locale et l'apparence de l'objet avec un histogramme des directions du gradient ou des orientations des contours.
+
+Dans le cadre de ce projet, le descripteur HOG a été utilisé pour décrire les différents chiffres.
+
+% ---------------------------------------
+\section{Pré-traitements}
+Avant de pouvoir calculer le descripteur HOG, une étape de pré-traitement est réalisée sur toutes les images afin de centrer le chiffre au milieu d'un fond blanc de 256x256 pixels. Ceci va permettre de diminuer le temps de calcul car moins de gradients et d'histogrammes sont calculés (image plus petite), mais également d'améliorer la classification. Cette opération est effectuée en Python directement avant l'extraction des features.
 
 % ---------------------------------------
 \section{Extraction des features}
-\todo[inline]{TODO}
+
+Comme décrit précédemment, le descripteur HOG est calculé sur chaque image. Il est toutefois important de bien choisir le nombre de pixels qui forment une cellule afin que les histogrammes gardent une taille raisonnable. S'il y a trop de cellules, l'utilisation de la mémoire explose et s'il n'y en a pas assez le descripteur généralise trop l'objet et la classification sera ensuite impossible. La figure \vref{fig:hog} permet de visualiser le descripteur HOG pour les chiffres \emph{0} et \emph{1}.
+
+\begin{figure}[!h]
+\includegraphics[width=\textwidth]{pictures/hog0}
+\includegraphics[width=\textwidth]{pictures/hog1}
+\caption{Représentation du descripteur HOG pour les chiffres \emph{0} et \emph{1}}
+\label{fig:hog}
+\end{figure}
 
 % ---------------------------------------
 \section{Classification}
