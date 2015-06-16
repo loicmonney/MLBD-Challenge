@@ -324,7 +324,7 @@
 	\addcontentsline{toc}{subsection}{\hspace{\cftsubsecnumwidth}#1}
 }
 \newcommand{\lchapter}[2][\_nolabel]{
-	\cleartoodd
+	%\cleartoodd
 	\chapter{#2}
 	\thispagestyle{chapterstart}
 	\ifthenelse{\equal{#1}{\_nolabel}}{}{\label{sec:#1}}
