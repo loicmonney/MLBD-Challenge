@@ -26,8 +26,28 @@ Comme décrit précédemment, le descripteur HOG est calculé sur chaque image. 
 
 % ---------------------------------------
 \section{Classification}
+
+Pour classifier les chiffres, deux classifieurs différents ont été utilisés: un SVM et un réseau de neurones artificiels. Dans les deux cas, nous y avons ajouté une phase de grid-search avec cross-validation lors de l'entrainement afin d'obtenir de bons jeux de paramètres. Les implémentations utilisées sont celles disponibles dans la librairie Python scikit-learn, car elles ont l'avantage justement d'offrir directement le grid-search et la cross-validation.
+
+%---------
+\subsection{SVM}
+\todo[inline]{TODO}
+
+\begin{figure}[!h]
+\includegraphics[width=\textwidth]{pictures/hog-svm-training}
+\caption{SVM avec un noyau linéaire: Courbes d'apprentissage}
+\label{fig:hog-svm-training}
+\end{figure}
+
+%---------
+\subsection{Réseau de neurones artificiels}
 \todo[inline]{TODO}
 
 % ---------------------------------------
 \section{Résultats}
+
+SVM: 86.68\%
+
+Réseau de neurones: 93+\%
+
 \todo[inline]{TODO}
