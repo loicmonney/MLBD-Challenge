@@ -18,7 +18,7 @@ Avant de pouvoir aisément travailler avec les images, il a été nécessaire de
 
 \section{Extraction de features SURF}
 
-De mon coté, j'ai suivi deux voies afin d'exploiter les possibilités de SURF. Tout d'abord en utilisant les features que l'on peut extraire via les descripteurs de SURF. En utilisant les méthodes fournies par Matlab (detectSURFFeatures), il est possible d'extraire les points d'intérêt de l'image (example en figure \ref{fig:surffeaturesexample}).
+De mon coté, j'ai suivi deux voies afin d'exploiter les possibilités de SURF. Tout d'abord en utilisant les features que l'on peut extraire via les descripteurs de SURF. En utilisant les méthodes fournies par Matlab (detectSURFFeatures), il est possible d'extraire les points d'intérêt de l'image (example en ure\ref{fig:surffeaturesexample}).
 
 \begin{figure}[h]
 \centering
@@ -37,7 +37,7 @@ Un autre problème qui se pose est que parfois, certaines images ne possèdent p
 
 \section{Classification}
 
-Afin de pouvoir classifier les différents caractères, on réseau de neurones a été choisi. Ce choix vient principalement de la facilité de travailler avec Matlab sur SURF et les réseaux de neurones. Cet environnement m'est également familié.
+Afin de pouvoir classifier les différents caractères, un réseau de neurones a été choisi. Ce choix vient principalement de la facilité de travailler avec Matlab sur SURF et les réseaux de neurones. Cet environnement m'est également familié.
 
 Chaque image traitée via SURF est devenue une colonne de la matrice et l'ensemble de ces colonnes représentes l'entièreté du dataset (toutes les images). Le système est un système à une couche cachée de type "feed-forward" avec 10 neurones. Certains tests ont été effectués avec différentes valeurs de neurones, sans succès. Le nombre 10 a donc été retenu par défaut.
 
@@ -56,7 +56,7 @@ Différents tests ont été effectués avec différents nombres de points d'int�
 \label{fig:resultdataset}
 \end{figure}
 
-La figure \ref{fig:resultdataset} montre les meilleurs résultats obtenus pour chaque nombre de points d'intérêts choisis pour le dataset avec les grandes images ou celles redimensionnées. On peut voir que les résultats avec les petites images sont meilleurs et augmenter le nombre de points au-delà de 10 ne sert é rien. Cela vient certainement du fait que l'on rempli de plus en plus de zéros au fur et à mesure que l'on augmente le nombre de points.
+La \ref{fig:resultdataset} montre les meilleurs résultats obtenus pour chaque nombre de points d'intérêts choisis pour le dataset avec les grandes images ou celles redimensionnées. On peut voir que les résultats avec les petites images sont meilleurs et augmenter le nombre de points au-delà de 10 ne sert é rien. Cela vient certainement du fait que l'on rempli de plus en plus de zéros au fur et à mesure que l'on augmente le nombre de points.
 
 \begin{figure}[h]
 \centering
@@ -65,7 +65,7 @@ La figure \ref{fig:resultdataset} montre les meilleurs résultats obtenus pour c
 \label{fig:confusionmatrice1}
 \end{figure}
 
-La figure \ref{fig:confusionmatrice1} nous montre la matrice de confusion du meilleur résultat avec 40 points d'intérêts sur les petites images. On peut voir certains souci entre le 3, le 5 et le 7 principalement. Le 9 a également du souci avec un peu tout le monde.
+La \ref{fig:confusionmatrice1} nous montre la matrice de confusion du meilleur résultat avec 40 points d'intérêts sur les petites images. On peut voir certains souci entre le 3, le 5 et le 7 principalement. Le 9 a également du souci avec un peu tout le monde.
 
 \section{Bag of features}
 
@@ -79,7 +79,7 @@ On n'est plus embêté par le nombre de points d'intérêts et les résultats so
 
 \section{Résultats}
 
-En parlant de résultats, les résultats atteints avec le "bag of features" sont légèrement meilleures qu'avec les features brutes SURF (figure \ref{fig:confusionmatrice2}).
+En parlant de résultats, les résultats atteints avec le "bag of features" sont légèrement meilleures qu'avec les features brutes SURF ( \ref{fig:confusionmatrice2}).
 
 \begin{figure}[h]
 \centering
@@ -88,7 +88,7 @@ En parlant de résultats, les résultats atteints avec le "bag of features" sont
 \label{fig:confusionmatrice2}
 \end{figure}
 
-Aux vues des résultats encourageants du "bag of features", j'ai essayé d'ajouter les lettres a à z dans la classification. Cela a fait chuté l'accuracy à 0.87, ce qui est correcte pour 36 classes (figure \ref{fig:confusionmatrice3}). Le 9 semble à nouveau avoir des problèmes, ici avec le 0 et le 3.
+Aux vues des résultats encourageants du "bag of features", j'ai essayé d'ajouter les lettres a à z dans la classification. Cela a fait chuté l'accuracy à 0.87, ce qui est correcte pour 36 classes (\ref{fig:confusionmatrice3}). Le 9 semble à nouveau avoir des problèmes, ici avec le 0 et le 3.
 
 \begin{figure}[h]
 \centering
