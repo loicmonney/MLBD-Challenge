@@ -25,38 +25,24 @@
 #
 #######################################################################################################################
 
-from metrics import plot_confusion_matrix, print_classification_report
-from sklearn.metrics.metrics import f1_score
+import matplotlib.pyplot as pyplot
 from data_loader import load_numbers
-from sklearn.cross_validation import train_test_split
-from svm import *
 from feature_extraction import extract_features
 
-## Vars
-force_train = True
-enable_plot = False
-
-## Load and split the data in train and test sets
-print "Loading data..."
+## Load the numbers
+print "Loading numbers..."
 X, y = load_numbers()
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
-## Get trained classifier
-print "Training classifier..."
-clf = load_or_train(X_train, y_train, force_train, enable_plot)
-print clf
+## Extract the features
+print "Extracting features..."
+features = extract_features(X)
 
-## Compute the features of the test set and predict
-print "Predicting test set..."
-features = extract_features(X_test)
-y_pred = clf.predict(features)
+print "Prepare data..."
+separated_by_classes = [[], [], [], [], [], [], [], [], [], []]
+for i, c in enumerate(y):
+    separated_by_classes[c].append(X[i])
 
-print y_test
-print y_pred
+## Box plot
+print "Creating boxplot..."
+boxplotElements = pyplot.boxplot(separated_by_classes)
 
-## Score
-f1 = f1_score(y_test, y_pred)
-print "f1-score for is {}%".format(f1)
-#if enable_plot:
-print_classification_report(y_test, y_pred)
-plot_confusion_matrix(y_test, y_pred, range(0, 10))

@@ -40,7 +40,7 @@ def load_numbers():
     classes = []
     paths = []
     for number in range(1, 10 + 1):
-        dir = 'data/Img/Sample' + str(number).zfill(3)
+        dir = 'data/Img4x3/Sample' + str(number).zfill(3)
         files = list_files(dir)
         paths += files
         for i in range(0, len(files)):

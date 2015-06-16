@@ -25,38 +25,35 @@
 #
 #######################################################################################################################
 
-from metrics import plot_confusion_matrix, print_classification_report
-from sklearn.metrics.metrics import f1_score
-from data_loader import load_numbers
-from sklearn.cross_validation import train_test_split
-from svm import *
-from feature_extraction import extract_features
+import matplotlib.pyplot as plt
 
-## Vars
-force_train = True
-enable_plot = False
+from skimage.feature import hog
+from skimage import data, color, exposure
+from PIL import Image, ImageChops
+from feature_extraction import *
+import numpy as np
 
-## Load and split the data in train and test sets
-print "Loading data..."
-X, y = load_numbers()
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+filename = 'data/Img4x3/Sample002/img002-003.png'
+#image = Image.open(filename).convert('L')
+#image = color.rgb2gray(image)
+#image = center_on_white(image, 256, 256)
+#image = np.array(image)
+im = get_image_data(filename)
+im = center_on_white(im, 256, 256)
+image = np.array(im.convert('L'))
 
-## Get trained classifier
-print "Training classifier..."
-clf = load_or_train(X_train, y_train, force_train, enable_plot)
-print clf
+fd, hog_image = hog(image, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2), visualise=True)
 
-## Compute the features of the test set and predict
-print "Predicting test set..."
-features = extract_features(X_test)
-y_pred = clf.predict(features)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4))
 
-print y_test
-print y_pred
+ax1.axis('off')
+ax1.imshow(image, cmap=plt.cm.gray)
+ax1.set_title('Input image')
 
-## Score
-f1 = f1_score(y_test, y_pred)
-print "f1-score for is {}%".format(f1)
-#if enable_plot:
-print_classification_report(y_test, y_pred)
-plot_confusion_matrix(y_test, y_pred, range(0, 10))
+# Rescale histogram for better display
+hog_image_rescaled = exposure.rescale_intensity(hog_image, in_range=(0, 0.02))
+
+ax2.axis('off')
+ax2.imshow(hog_image_rescaled, cmap=plt.cm.gray)
+ax2.set_title('Histogram of Oriented Gradients')
+plt.show()

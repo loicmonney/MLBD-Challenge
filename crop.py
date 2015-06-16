@@ -25,38 +25,33 @@
 #
 #######################################################################################################################
 
-from metrics import plot_confusion_matrix, print_classification_report
-from sklearn.metrics.metrics import f1_score
-from data_loader import load_numbers
-from sklearn.cross_validation import train_test_split
-from svm import *
-from feature_extraction import extract_features
+from PIL import Image, ImageChops
 
-## Vars
-force_train = True
-enable_plot = False
 
-## Load and split the data in train and test sets
-print "Loading data..."
-X, y = load_numbers()
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+def trim(im):
+    bg = Image.new(im.mode, im.size, im.getpixel((0, 0)))
+    diff = ImageChops.difference(im, bg)
+    diff = ImageChops.add(diff, diff, 2.0, -100)
+    bbox = diff.getbbox()
+    if bbox:
+        return im.crop(bbox)
 
-## Get trained classifier
-print "Training classifier..."
-clf = load_or_train(X_train, y_train, force_train, enable_plot)
-print clf
 
-## Compute the features of the test set and predict
-print "Predicting test set..."
-features = extract_features(X_test)
-y_pred = clf.predict(features)
+def center_on_white(im):
+    trimmed = trim(im)
 
-print y_test
-print y_pred
+    ## create a new 256x256 pixel image surface
+    ## make the background white (default bg=black)
+    bg = Image.new("RGB", [256, 256], (255, 255, 255))
 
-## Score
-f1 = f1_score(y_test, y_pred)
-print "f1-score for is {}%".format(f1)
-#if enable_plot:
-print_classification_report(y_test, y_pred)
-plot_confusion_matrix(y_test, y_pred, range(0, 10))
+    ## Paste de trimmed image in the middle of background image
+    x = (bg.size[0] - trimmed.size[0]) / 2
+    y = (bg.size[1] - trimmed.size[1]) / 2
+    bg.paste(trimmed, (x, y))
+
+    return bg
+
+
+im = Image.open("data/Img4x3/Sample001/img001-001.png")
+im = center_on_white(im)
+im.show()

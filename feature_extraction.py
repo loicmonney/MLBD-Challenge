@@ -30,35 +30,66 @@ from PIL import Image
 from sklearn.decomposition import RandomizedPCA
 from sklearn.preprocessing import StandardScaler
 from skimage.feature import hog
+from PIL import Image, ImageChops
+
 
 def get_image_data(filename):
     img = Image.open(filename)
-    #img = img.getdata()
-    #img = img.resize(STANDARD_SIZE)
-    #img = map(list, img)
-    img = np.array(img.convert('L'))
+    # img = img.getdata()
+    # img = img.resize(STANDARD_SIZE)
+    # img = map(list, img)
+    img = img.convert('L')
     return img
-    #s = img.shape[0] * img.shape[1]
-    #img_wide = img.reshape(1, s)
-    #return img_wide[0]
+    # s = img.shape[0] * img.shape[1]
+    # img_wide = img.reshape(1, s)
+    # return img_wide[0]
 
-pca = RandomizedPCA(n_components=10)
-std_scaler = StandardScaler()
 
-def apply_pca(data):
-    flat = []
-    for d in data:
-        flat += d.flatten()
-    data = pca.fit_transform(data)
-    data = std_scaler.fit_transform(data)
-    return data
+def trim(im):
+    bg = Image.new(im.mode, im.size, im.getpixel((0, 0)))
+    diff = ImageChops.difference(im, bg)
+    diff = ImageChops.add(diff, diff, 2.0, -100)
+    bbox = diff.getbbox()
+    if bbox:
+        return im.crop(bbox)
+
+
+def center_on_white(im, w, h):
+    trimmed = trim(im)
+
+    ## create a new WxH pixel image surface
+    ## make the background white (default bg=black)
+    bg = Image.new("RGB", [w, h], (255, 255, 255))
+
+    ## Paste de trimmed image in the middle of background image
+    x = (bg.size[0] - trimmed.size[0]) / 2
+    y = (bg.size[1] - trimmed.size[1]) / 2
+    bg.paste(trimmed, (x, y))
+
+    return bg
+
+
+# pca = RandomizedPCA(n_components=10)
+# std_scaler = StandardScaler()
+#
+#
+# def apply_pca(data):
+#    flat = []
+#    for d in data:
+#        flat += d.flatten()
+#    data = pca.fit_transform(data)
+#    data = std_scaler.fit_transform(data)
+#    return data
+
 
 def extract_features(paths):
     all_features = []
     for f in paths:
-        data = get_image_data(f)
+        im = get_image_data(f)
+        im = center_on_white(im, 256, 256)
+        data = np.array(im.convert('L'))
         features = []
-        fd = hog(data, orientations=9, pixels_per_cell=(4, 4), cells_per_block=(2, 2))
+        fd = hog(data, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(2, 2))
         features.extend(fd)
         # features = apply_pca(data)
         all_features.append(features)

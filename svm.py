@@ -30,16 +30,15 @@ import matplotlib.pyplot as plt
 import os
 import pickle
 from metrics import plot_confusion_matrix, print_classification_report
-from sklearn import svm, cross_validation
+from sklearn import svm
 from feature_extraction import extract_features
 from sklearn.learning_curve import learning_curve
-
-
-def train(clf, X_train, y_train):
-    """ Train and return an SVM classifier """
-
-    clf.fit(X_train, y_train)
-    return clf
+from sklearn.cross_validation import ShuffleSplit
+from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import BernoulliRBM
+from sklearn.grid_search import GridSearchCV
+from sklearn.pipeline import Pipeline
+import time
 
 
 def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
@@ -116,34 +115,19 @@ def load_or_train(X, y, force_train=False, enable_plot=False):
 
         X = extract_features(X)
 
-        ## Instantiate a classifier
-        clf = svm.SVC(kernel='linear')
-
         ## Cross-validation
-        from sklearn.cross_validation import ShuffleSplit
-
         cv = ShuffleSplit(len(X), n_iter=10, test_size=0.2, random_state=0)
-
-        from sklearn.grid_search import GridSearchCV
-        import numpy as np
-
         gammas = np.logspace(-6, -1, 10)
-        estimator = svm.SVC(gamma=0.001)
-        classifier = GridSearchCV(estimator=estimator, cv=cv, param_grid=dict(gamma=gammas), n_jobs=6, verbose=2)
-        classifier.fit(X, y)
 
-        title = 'Learning Curves (SVM, linear kernel, $\gamma=%.6f$)' % classifier.best_estimator_.gamma
-        estimator = svm.SVC(kernel='linear', gamma=classifier.best_estimator_.gamma)
+        ## Grid search
+        clf = GridSearchCV(estimator=svm.SVR(), cv=cv, param_grid=dict(gamma=gammas), n_jobs=1, verbose=10)
+        clf.fit(X, y)
+
+        ## Plot learning curve
+        title = 'Learning Curves (SVM, linear kernel, $\gamma=%.6f$)' % clf.best_estimator_.gamma
+        estimator = svm.SVC(kernel='linear', gamma=clf.best_estimator_.gamma)
         plot_learning_curve(estimator, title, X, y, cv=cv)
         plt.show()
-
-        ## Cross validation
-        # kfolds = 10
-        # scores = cross_validation.cross_val_score(clf, X, y, cv=kfolds)
-        # print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-
-        ## Train the classifier on the whole data set, and save it
-        clf = train(clf, X, y)
 
         ## show information about the training
         if enable_plot:
@@ -155,3 +139,62 @@ def load_or_train(X, y, force_train=False, enable_plot=False):
         pickle.dump(clf, open(clf_path, 'wb'))
 
     return clf
+
+
+def load_or_train2(X, y, force_train=False, enable_plot=False):
+    clf_path = './clf.pkl'
+
+    if not force_train and os.path.exists(clf_path):
+        print "> loading from file..."
+        classifier = pickle.load(open(clf_path, 'rb'))
+        print "> loaded"
+    else:
+        print "> training..."
+
+        X = extract_features(X)
+
+#[CV]  logistic__C=1.0, rbm__n_iter=80, rbm__learning_rate=0.1, rbm__n_components=200, score=0.931818 - 5.3min
+
+        ## initialize the RBM + Logistic Regression pipeline
+        rbm = BernoulliRBM(learning_rate=0.1, n_iter=80, n_components=200)
+        logistic = LogisticRegression(C=1.0)
+        classifier = Pipeline([("rbm", rbm), ("logistic", logistic)])
+
+        # Perform a grid search on the learning rate, number of iterations, and number of components on the RBM and
+        # C for Logistic Regression
+        print "SEARCHING RBM + LOGISTIC REGRESSION"
+        params = {
+            "rbm__learning_rate": [0.1, 0.01, 0.001],
+            "rbm__n_iter": [20, 40, 80],
+            "rbm__n_components": [50, 100, 200],
+            "logistic__C": [1.0, 10.0, 100.0]}
+
+        ## Cross-validation
+    #    cv = ShuffleSplit(len(X), n_iter=10, test_size=0.2, random_state=0)
+
+        ## Perform a grid search over the parameter
+        start = time.time()
+    #    gs = GridSearchCV(classifier, params, verbose=10, cv=cv)
+    #    gs.fit(X, y)
+        classifier.fit(X, y)
+
+        ## Print diagnostic information to the user and grab the best model
+        print "\ndone in %0.3fs" % (time.time() - start)
+    #    print "best score: %0.3f" % (gs.best_score_)
+    #    print "RBM + LOGISTIC REGRESSION PARAMETERS"
+    #    bestParams = gs.best_estimator_.get_params()
+        # loop over the parameters and print each of them out
+        # so they can be manually set
+    #    for p in sorted(params.keys()):
+    #        print "\t %s: %f" % (p, bestParams[p])
+
+        ## show information about the training
+        if enable_plot or True:
+            outputs = classifier.predict(X)
+            plot_confusion_matrix(y, outputs, range(0, 10))
+            print_classification_report(y, outputs)
+
+        ## Save the model
+        pickle.dump(classifier, open(clf_path, 'wb'))
+
+    return classifier
